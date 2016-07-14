@@ -15,7 +15,6 @@ class TitleReturner:
         title = self._getTitle(content)
 
         if title:
-            print title
             return title
         else:
             return "404 - Yeah, I'm not sure either."
