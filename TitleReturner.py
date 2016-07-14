@@ -15,7 +15,11 @@ class TitleReturner:
         title = self._getTitle(content)
 
         if title:
-            return title
+            if len(title) > 30:
+                return "Title contains to much characters."
+            else:
+                print title
+                return title
         else:
             return "404 - Yeah, I'm not sure either."
 
@@ -29,7 +33,7 @@ class TitleReturner:
             content += chunk.encode('utf8')
             if '</title>' in content:
                 r.close()
-                return content
+                return content.encode('utf8')
             if len(content) > maxsize:
                 r.close()
                 return ValueError('Response too large')
@@ -43,3 +47,7 @@ class TitleReturner:
             return soup.title.string
         else:
             return ""
+
+if __name__ == "__main__":
+    T = TitleReturner()
+    print T.returnTitle('') # url
