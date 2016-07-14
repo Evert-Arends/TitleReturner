@@ -30,7 +30,7 @@ class TitleReturner:
         maxsize = 100000
         content = ''
         for chunk in r.iter_content(2048):
-            content += chunk.encode('utf8')
+            content += chunk
             if '</title>' in content:
                 r.close()
                 return content.encode('utf8')
@@ -50,4 +50,4 @@ class TitleReturner:
 
 if __name__ == "__main__":
     T = TitleReturner()
-    print T.returnTitle('') # url
+    print T.returnTitle('')
