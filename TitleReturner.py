@@ -1,9 +1,11 @@
 # Safely return titles from web pages.
 # Copyright for this script: Evert Arends
 import requests
+import textwrap
+import json
 from bs4 import BeautifulSoup
 
-SAFE = True  # Are valid SSL certs important to you, or not? To me they are. Set to false if you don't care.
+UseSSLProtection = True  # Are valid SSL certs important to you, or not? To me they are. Set to false if you don't care.
 
 
 class TitleReturner:
@@ -15,19 +17,23 @@ class TitleReturner:
         title = self._getTitle(content)
 
         if title:
-            if len(title) > 30:
-                return "Title contains to much characters."
+            title.replace("\n", "");
+            if len(title) > 490:
+                maxCharTitle = textwrap.wrap(title, 480)
+                maxCharTitle += ' (..)'
+                title = maxCharTitle.replace("\n", "")
+                return title
             else:
-                print title
+                title = title.replace("\n", "")
                 return title
         else:
-            return "404 - Yeah, I'm not sure either."
+            return "404"
 
     @staticmethod
     def _getContent(url):
-        r = requests.get(url, timeout=5, stream=True, verify=SAFE)
+        r = requests.get(url, timeout=5, stream=True, verify=UseSSLProtection)
 
-        maxsize = 100000
+        maxsize = 200000
         content = ''
         for chunk in r.iter_content(2048):
             content += chunk
@@ -46,8 +52,7 @@ class TitleReturner:
         if title:
             return soup.title.string
         else:
-            return ""
+            return
 
 if __name__ == "__main__":
-    T = TitleReturner()
-    print T.returnTitle('')
+    pass
